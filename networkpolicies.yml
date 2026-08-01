@@ -6,30 +6,38 @@ spec:
   podSelector:
     matchLabels:
       app: swiggy
+
   policyTypes:
     - Ingress
     - Egress
+
+  # Allow traffic from pods in the ingress-nginx namespace
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: ingress-nginx
-          podSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: ingress-nginx
-            ports:
-              - port: 80
+      ports:
+        - protocol: TCP
+          port: 80
+
   egress:
+    # Allow connection to the database pods
     - to:
         - podSelector:
             matchLabels:
               app: appdb
-            ports:
-              - port: 3306
+      ports:
+        - protocol: TCP
+          port: 3306
+
+    # Allow DNS queries to kube-system
     - to:
-      - namespaceSelector:
-          matchLabels:
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: kube-system
-          ports:
-            - port: 53
-              protocol: UDP
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
