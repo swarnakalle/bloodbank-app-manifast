@@ -40,7 +40,7 @@ spec:
         name: pvc1
       spec:
         accessModes:
-          - ReadwriteOnce
+          - ReadWriteOnce
         resource:
           requests:
             storage: "1Gi"
