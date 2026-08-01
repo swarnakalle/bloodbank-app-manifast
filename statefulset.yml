@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  replcas: 1
+  selector:
+    matchLabels:
+      app: appdb
+  templates:
+    metadata:
+      labels:
+        app: appdb
+    spec:
+      containers:
+        - name: dbcont
+          image: swarnakalle/blood:db
+          ports:
+            - containerPort: 3306
+        #secret integration
+      envFrom:
+        - secretRef:
+            name: bankapp-db-secret
+        #resourcequota
+      resources:
+        requests:
+          cpus: "100m"
+          memory: "128Mi"
+        limits:
+          cpus: "200m"
+          memory: "256Mi"    
+        
+      volumeMounts:
+        - name: pvc1
+          mountPath: /var/lib/mysql
+
+  volumeClaimTemplates:
+    - metadata:
+        name: pvc1
+      spec:
+        accessModes:
+          - ReadwriteOnce
+        resource:
+          requests:
+            storage: "1Gi"
