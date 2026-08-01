@@ -33,7 +33,7 @@ spec:
         
       volumeMounts:
         - name: pvc1
-          mountPath: /usr/share/nginx/html
+          mountPath: /usr/share/nginx/html/
 
   volumeClaimTemplates:
     - metadata:
